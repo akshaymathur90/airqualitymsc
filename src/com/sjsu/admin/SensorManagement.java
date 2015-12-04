@@ -1,6 +1,7 @@
 package com.sjsu.admin;
 
 import java.io.IOException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,6 +23,7 @@ import com.sjsu.sensor.Sensor;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import com.sjsu.constants.ConstantValues;
 
 @Path("/sensormanagement")
 public class SensorManagement {
@@ -53,7 +55,7 @@ public class SensorManagement {
 				}
 				connection.close();
 				Client client = Client.create();
-				String postUrl = "http://52.24.45.112:8080/SensorAPI/sensorapi/controllerservice/addsensor";
+				String postUrl = ConstantValues.baseURL+"/SensorAPI/sensorapi/controllerservice/addsensor";
 				WebResource webResource = client.resource(postUrl);
 				        String inputData = "{\"sensorID\":"+sensorID+",\"location\":\""+location+"\",\"sensorState\":0}";
 				        ClientResponse wsResponse = webResource.type("application/json").post(ClientResponse.class,inputData);
@@ -107,7 +109,7 @@ public class SensorManagement {
 				}
 				connection.close();
 				Client client = Client.create();
-				String postUrl = "http://52.24.45.112:8080/SensorAPI/sensorapi/controllerservice/addNewController";
+				String postUrl = ConstantValues.baseURL+"/SensorAPI/sensorapi/controllerservice/addNewController";
 				WebResource webResource = client.resource(postUrl);
 				String inputData = "{\"controllerID\":"+controllerID+",\"location\":"+"\""+location+"\""+"}";
 				System.out.println(inputData);
@@ -131,7 +133,67 @@ public class SensorManagement {
 		}
 		return null;
 	}
-	
+	@GET
+	@Path("/getSensorNetwork")
+	public Response getSensorNetwork() {
+		Client client = Client.create();
+		String postUrl = ConstantValues.baseURL+"/SensorAPI/sensorapi/controllerservice/showSensorNetwork";
+		WebResource webResource = client.resource(postUrl);
+		 ClientResponse wsResponse = webResource.type("application/json").get(ClientResponse.class);
+		    if(wsResponse.getStatus()!=201){
+		        throw new RuntimeException("HTTP Error: "+ wsResponse.getStatus());
+		    }
+		     
+		    String result = wsResponse.getEntity(String.class);
+		    System.out.println("Response from the Server: ");
+		    System.out.println(result);
+		    return Response.status(200).entity(result).build();
+		
+	}
+	@POST
+	@Path("/toggleSensor")
+	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON })
+	public Response toggleSensor(String incomingdata) {
+		
+		Client client = Client.create();
+		String postUrl = ConstantValues.baseURL+"/SensorAPI/sensorapi/controllerservice/togglesensor";
+		WebResource webResource = client.resource(postUrl);
+		//String inputData = "{\"controllerID\":"+controllerID+",\"location\":"+"\""+location+"\""+"}";
+		System.out.println(incomingdata);
+	    ClientResponse wsResponse = webResource.type("application/json").post(ClientResponse.class,incomingdata);
+	    if(wsResponse.getStatus()!=201){
+	        throw new RuntimeException("HTTP Error: "+ wsResponse.getStatus());
+	    }
+	     
+	    String result = wsResponse.getEntity(String.class);
+	    System.out.println("Response from the Server: ");
+	    System.out.println(result);
+		
+		return Response.status(200).entity(result).build();
+		
+	}
+	@POST
+	@Path("/pullSensorData")
+	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON })
+	public Response pullSensorData(String incomingdata) {
+		
+		Client client = Client.create();
+		String postUrl = ConstantValues.baseURL+"/SensorAPI/sensorapi/controllerservice/getSensorData";
+		WebResource webResource = client.resource(postUrl);
+		//String inputData = "{\"controllerID\":"+controllerID+",\"location\":"+"\""+location+"\""+"}";
+		System.out.println(incomingdata);
+	    ClientResponse wsResponse = webResource.type("application/json").post(ClientResponse.class,incomingdata);
+	    if(wsResponse.getStatus()!=201){
+	        throw new RuntimeException("HTTP Error: "+ wsResponse.getStatus());
+	    }
+	     
+	    String result = wsResponse.getEntity(String.class);
+	    System.out.println("Response from the Server: ");
+	    System.out.println("ComputeAPI"+result);
+		
+		return Response.status(200).entity(result).build();
+		
+	}
 	@GET
 	@Path("/getControllerLocations")
 	public Response getControllerLocations() {

@@ -11,7 +11,7 @@ function getSensorNetwork()
     
     ajaxObj = {
 			type : "GET",
-			url : Constants.getInstance().hostname + "/SensorAPI/sensorapi/controllerservice/showSensorNetwork",
+			url : Constants.getInstance().hostname + "/MobileSensorCloud/computeapi/sensormanagement/getSensorNetwork",
 			contentType : "application/json",
 			error : function(jqXHR, textStatus, errorThrown) {
 				console.log(jqXHR.responseText);
@@ -114,7 +114,7 @@ function gotoNode(input){
 	var humidity = document.getElementById("humidity");
 	ajaxObj = {  
 			type: "POST",
-			url: Constants.getInstance().hostname + "/SensorAPI/sensorapi/controllerservice/getSensorData", 
+			url: Constants.getInstance().hostname + "/MobileSensorCloud/computeapi/sensormanagement/pullSensorData", 
 			data: jsondata, 
 			contentType:"application/json",
 			error: function(jqXHR, textStatus, errorThrown) {

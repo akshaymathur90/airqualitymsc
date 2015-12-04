@@ -2,7 +2,7 @@ var Constants = (function () {
     var instance;    
     function createInstance() {
         var object = new Object();
-        object.hostname = "http://aqmsc-2087274558.us-west-2.elb.amazonaws.com/";
+        object.hostname = "http://localhost:8090";
         object.getuserdetails = object.hostname+ "/MobileSensorCloud/computeapi/usercontroller/getuserdetails";
         object.adduser = object.hostname+ "/MobileSensorCloud/computeapi/usercontroller/adduser";
         object.activateinstance = object.hostname+ "/MobileSensorCloud/computeapi/sensorinstancecontroller/activateinstance";

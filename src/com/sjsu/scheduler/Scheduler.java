@@ -35,7 +35,7 @@ public class Scheduler {
 		try
 		{
 			Connection connection = new DatabaseConnection().getConnection();
-			String sql = "select sensorid from usersensorallocation where userid = ?";
+			String sql = "select distinct instancedetails.SensorId from instancedetails,sensorallocation where instancedetails.Instanceid=sensorallocation.Instanceid and sensorallocation.UserId=?";
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			stmt.setInt(1, Integer.parseInt(incomingdata));
 			ResultSet rs;

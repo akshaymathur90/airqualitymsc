@@ -11,7 +11,7 @@ function getSensorNetwork()
     
     ajaxObj = {
 			type : "GET",
-			url : Constants.getInstance().hostname + "/SensorAPI/sensorapi/controllerservice/showSensorNetwork",
+			url : Constants.getInstance().hostname + "/MobileSensorCloud/computeapi/sensormanagement/getSensorNetwork",
 			contentType : "application/json",
 			error : function(jqXHR, textStatus, errorThrown) {
 				console.log(jqXHR.responseText);
@@ -110,7 +110,7 @@ function gotoNode(input){
 	var jsondata = '{"sensorID":'+sensorData[0]+',"location":\"'+sensorData[1]+'\"}';
 	ajaxObj = {  
 			type: "POST",
-			url: Constants.getInstance().hostname + "/SensorAPI/sensorapi/controllerservice/togglesensor", 
+			url: Constants.getInstance().hostname + "/MobileSensorCloud/computeapi/sensormanagement/toggleSensor", 
 			data: jsondata, 
 			contentType:"application/json",
 			error: function(jqXHR, textStatus, errorThrown) {
