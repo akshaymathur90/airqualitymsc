@@ -1,6 +1,7 @@
 $(document).ready(function() {
 	
 	getAllocatedSensors();
+	getUserSchdule();
 	var $post_new_sensor = $('#new_schedule');
 	
 	$('#submit_schedule').click(function(e) {
@@ -65,4 +66,42 @@ function getAllocatedSensors()
 
 		return $.ajax(ajaxObj);
 
+}
+function getUserSchdule(){
+	var userid = sessionStorage.getItem('useridvalue');
+	console.log(userid);
+	ajaxObj = {
+			type : "POST",
+			url : Constants.getInstance().hostname + "/MobileSensorCloud/computeapi/scheduler/getUserSchedule",
+			data: JSON.stringify(userid),
+			contentType : "application/json",
+			error : function(jqXHR, textStatus, errorThrown) {
+				console.log(jqXHR.responseText);
+			},
+			success : function(data) {
+				console.log(data);
+				var scheduledata = document.getElementById('schedule_data');
+				var tablebody = document.createElement('TBODY');
+				for(var key in data) {
+				    var tr = document.createElement('TR');
+				    var td1 = document.createElement('TD');
+				    var td2 = document.createElement('TD');
+				    var td3 = document.createElement('TD');
+				    td1.appendChild(document.createTextNode(key));
+				    td2.appendChild(document.createTextNode(data[key].time));
+				    td3.appendChild(document.createTextNode(data[key].sensorid));
+				    tr.appendChild(td1);
+				    tr.appendChild(td2);
+				    tr.appendChild(td3);
+				    tablebody.appendChild(tr);
+				}
+				scheduledata.appendChild(tablebody);
+			},
+			complete : function(XMLHttpRequest) {
+				// console.log( XMLHttpRequest.getAllResponseHeaders() );
+			},
+			dataType : "json" // request JSON
+		};
+
+		return $.ajax(ajaxObj);
 }

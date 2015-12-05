@@ -74,11 +74,12 @@ public class Scheduler {
 			 String userid = jsonobj.optString("userid");
 			 System.out.println(allocatedSensor+"  "+date.toString()+"  "+userid);
 			 Connection connection = new DatabaseConnection().getConnection();
-			 String sql = "INSERT INTO Scheduler (sensorid, Time) VALUES (?, ?)";
+			 String sql = "INSERT INTO Scheduler (sensorid, Time,userid) VALUES (?, ?,?)";
 				PreparedStatement stmt = connection
 						.prepareStatement(sql);
 				stmt.setInt(1, Integer.parseInt(allocatedSensor));
 				stmt.setTimestamp(2, new java.sql.Timestamp(date.getTime()));
+				stmt.setInt(3, Integer.parseInt(userid));
 				int rowsInserted = stmt.executeUpdate();
 				if(rowsInserted==1){
 					System.out.println("Scheduled Successfully in database");
@@ -97,6 +98,43 @@ public class Scheduler {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	@POST
+	@Path("/getUserSchedule")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response getUserSchedule(String incomingdata)
+	{
+		System.out.println(incomingdata);
+		incomingdata = incomingdata.replace("\"", "");
+		System.out.println("HelloScheduler");
+		try
+		{
+			Connection connection = new DatabaseConnection().getConnection();
+			String sql = "select Time,Sensorid from Scheduler where userid =? and DoneFlag=0;";
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt.setInt(1, Integer.parseInt(incomingdata));
+			ResultSet rs;
+				rs = stmt.executeQuery();
+				JSONArray jarray = new JSONArray();
+			while(rs.next())
+			{
+				JSONObject jobj = new JSONObject();
+				jobj.put("time", rs.getString("Time"));
+				jobj.put("sensorid", rs.getInt("Sensorid"));
+				jarray.put(jobj);
+				
+			}
+			
+			System.out.println(jarray.toString());
+			return Response.status(200).entity(jarray).build();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return null;
+		
 	}
 
 }
