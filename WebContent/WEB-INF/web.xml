@@ -29,4 +29,9 @@
 		<servlet-name>Jersey Web Application</servlet-name>
 		<url-pattern>/computeapi/*</url-pattern>
 	</servlet-mapping>
+	<listener>
+    <listener-class>
+       org.quartz.ee.servlet.QuartzInitializerListener
+   </listener-class>
+</listener>
 </web-app>
