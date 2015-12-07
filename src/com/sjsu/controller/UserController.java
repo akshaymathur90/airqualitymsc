@@ -78,7 +78,9 @@ public class UserController {
 			conn = new DatabaseConnection().getConnection();
 			stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
+			int userid =0;
 			while (rs.next()) {
+				userid = rs.getInt("UserID");
 				jObj.put("UserID", rs.getInt("UserID"));
 				jObj.put("FirstName", rs.getString("FirstName"));
 				jObj.put("LastName", rs.getString("LastName"));
@@ -90,6 +92,14 @@ public class UserController {
 				jObj.put("Country", rs.getString("Country"));
 				jObj.put("Gender", rs.getString("Gender"));
 			}
+			String queryupdate ="update User set status='Active' where UserID ="+userid;
+			Statement st = conn.createStatement();
+			st.executeUpdate(queryupdate);
+			
+			String queryinsert ="Insert into loginmetrics(userid,logintime) VALUES (? , sysdate())";
+			PreparedStatement stinsert = conn.prepareStatement(queryinsert);
+			stinsert.setInt(1, userid);
+			stinsert.executeUpdate();
 			System.out.println(jObj.toString());
 			return jObj;
 		} catch (Exception e) {
