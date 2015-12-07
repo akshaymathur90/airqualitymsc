@@ -15,7 +15,8 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		var userId = sessionStorage.getItem('useridvalue');
-		var SensorData = getSensorData(userId);
+		setInterval(function() { getSensorData(userId); }, 5000);
+		//var SensorData = getSensorData(userId);
 	});
 	function getSensorData(userId) {
 		var reqData = {

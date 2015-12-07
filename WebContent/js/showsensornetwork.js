@@ -1,6 +1,11 @@
+var geocoder;
+var map;
+var maplocations;
 $(document).ready(function() {
 	
 	getSensorNetwork();
+	initialize();
+	getSensorLocations();	
 });
 
 function getSensorNetwork()
@@ -127,5 +132,50 @@ function gotoNode(input){
 		};
 		
 		$.ajax(ajaxObj);
+	
+}
+function initialize() {
+	  geocoder = new google.maps.Geocoder();
+	  var latlng = new google.maps.LatLng(37.33474664945566, -121.8819808959961);
+	  var mapOptions = {
+	    zoom: 14,
+	    center: latlng,
+	    mapTypeId: google.maps.MapTypeId.ROADMAP
+	  }
+	  map = new google.maps.Map(document.getElementById('mymap'), mapOptions);
+	}
+function getSensorLocations(){
+	ajaxObj = {
+			type : "GET",
+			url : Constants.getInstance().hostname + "/MobileSensorCloud/computeapi/sensormanagement/getControllerLocations",
+			contentType : "application/json",
+			error : function(jqXHR, textStatus, errorThrown) {
+				console.log(jqXHR.responseText);
+			},
+			success : function(data) {
+				console.log(data.locationData);
+				var locations = data.locationData;
+				var selectlocations = document.getElementById('sensor_location');
+				for(var i = 0; i < locations.length; i++) {
+				    //var opt = document.createElement('option');
+				    //opt.innerHTML = locations[i].location;
+				    //opt.value = locations[i].location;
+				    //selectlocations.appendChild(opt);
+				    var lat = locations[i].x;
+				    var lng = locations[i].y;
+				    marker = new google.maps.Marker({
+				        position: new google.maps.LatLng(lat, lng),
+				        map: map,
+				        title: locations[i].location
+				      });
+				}
+			},
+			complete : function(XMLHttpRequest) {
+				// console.log( XMLHttpRequest.getAllResponseHeaders() );
+			},
+			dataType : "json" // request JSON
+		};
+
+		return $.ajax(ajaxObj);
 	
 }

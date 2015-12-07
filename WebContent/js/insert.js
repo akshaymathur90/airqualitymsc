@@ -74,7 +74,7 @@ function getSensorLocations(){
 }
 function initialize() {
 	  geocoder = new google.maps.Geocoder();
-	  var latlng = new google.maps.LatLng(37.3382, -121.8863);
+	  var latlng = new google.maps.LatLng(37.33474664945566, -121.8819808959961);
 	  var mapOptions = {
 	    zoom: 14,
 	    center: latlng,
